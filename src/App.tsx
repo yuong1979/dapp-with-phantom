@@ -1,6 +1,6 @@
 import { createDefaultAuthorizationResultCache, SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {
     GlowWalletAdapter,
@@ -9,8 +9,12 @@ import {
     SolflareWalletAdapter,
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
+import {
+    Program, Provider, web3, BN
+} from '@project-serum/anchor';
+import { clusterApiUrl, Connection } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo } from 'react';
+import idl from './idl.json';
 
 require('./App.css');
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -58,10 +62,40 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
     );
 };
 
+// const Content: FC = () => {
+//     return (
+//         <div className="App">
+//             <button> Dude</button>
+//             <WalletMultiButton />
+//         </div>
+//     );
+// };
+
+
 const Content: FC = () => {
+
+    const wallet = useAnchorWallet();
+
+    function getProvider() {
+        if (!wallet) {
+            return null;
+        }
+        /* create the provider and return it to the caller  */
+        /* network set to local network for now  */
+        const network = "http://127.0.0.1:8899";
+        const connection = new Connection(network, "processed");
+        const provider = new Provider(
+            connection, wallet, {"preflightCommitment": "processed"},
+        );
+        return provider;
+    }
+    
     return (
         <div className="App">
+            <button> Dude</button>
             <WalletMultiButton />
         </div>
     );
-};
+
+}
+
