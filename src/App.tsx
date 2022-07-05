@@ -84,6 +84,7 @@ const Content: FC = () => {
         /* network set to local network for now  */
         const network = "http://127.0.0.1:8899";
         const connection = new Connection(network, "processed");
+        
         const provider = new Provider(
             connection, wallet, {"preflightCommitment": "processed"},
         );
