@@ -84,16 +84,53 @@ const Content: FC = () => {
         /* network set to local network for now  */
         const network = "http://127.0.0.1:8899";
         const connection = new Connection(network, "processed");
-        
+
         const provider = new Provider(
             connection, wallet, {"preflightCommitment": "processed"},
         );
         return provider;
     }
     
+    //for initializing
+    async function createCounter() {
+        const provider = getProvider()
+        const baseAccount = web3.Keypair.generate();
+        if (!provider){
+            throw("Provider is null");
+        }
+        //create the program interface combining the idl, program ID, and provider
+
+        //Bug with default importing when handling string value types, fix by re-converting to json
+        const a = JSON.stringify(idl);
+        const b = JSON.parse(a);
+        const program = new Program(b, idl.metadata.address, provider);
+        try {
+            // interact with the program via rpc
+            await program.rpc.initialize({
+                accounts: {
+                    myAccount: baseAccount.publicKey,
+                    user: provider.wallet.publicKey,
+                    systemProgram: web3.SystemProgram.programId,
+                },
+                signers: [baseAccount]
+            });
+
+            const account = await program.account.myAccount.fetch(baseAccount.publicKey);
+            console.log('account:', account);
+        } catch (err) {
+            console.log("transaction error", err);
+        }
+    }
+
+
+
+
     return (
         <div className="App">
-            <button> Dude</button>
+            <button onClick={createCounter}> Initialize </button>
+            <button> Increment </button>
+            <button> Decrement </button>
+            <button> Update </button>
             <WalletMultiButton />
         </div>
     );
