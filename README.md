@@ -44,3 +44,30 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
+
+
+Tutorial is based on https://www.youtube.com/watch?v=vt8GUw_PDqM&list=PL53JxaGwWUqCr3xm4qvqbgpJ4Xbs4lCs7&index=13
+
+
+git clone https://github.com/yuong1979/dapp-with-phantom.git
+
+npm install
+
+npm start
+
+If the above doesnt work - run the below
+
+update all the packages
+npm update
+
+check if you are are on localhost with 
+solana config get
+
+if not set it to the localhost
+solana config set —url locahost
+ 
+Make sure that there are lamports in your phantom wallet
+solana airdrop 1 "walletaddress"
